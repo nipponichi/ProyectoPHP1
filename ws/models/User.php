@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-require_once '../ws/interfaces/IToJson.php';
+require_once 'ws/interfaces/IToJson.php';
 
 class User implements IToJson 
 {
+    private int $id;
     private string $name;
     private string $last_name;
     private string $password;
@@ -18,17 +19,19 @@ class User implements IToJson
     private bool $newsletter;
 
     public function __construct(
+        int $id,
         string $name, 
         string $last_name, 
         string $password, 
-        string $phone, 
-        string $email, 
-        string $gender, 
+        ?string $phone, 
+        ?string $email, 
+        ?string $gender, 
         \DateTime $birth_date, 
-        string $how_meet_us, 
+        ?string $how_meet_us, 
         bool $privacy_policy, 
         bool $newsletter
     ) {
+        $this->id = $id;
         $this->name = $name;
         $this->last_name = $last_name;
         $this->password = $password;
@@ -42,6 +45,11 @@ class User implements IToJson
     }
 
         // Getters
+        public function getId() 
+        {
+            return $this->id;
+        }
+
         public function getName()
         {
             return $this->name;
@@ -93,6 +101,10 @@ class User implements IToJson
         }
     
         // Setters
+        public function setId(int $id) {
+            $this->id = $id;
+        }
+
         public function setName(string $name)
         {
             $this->name = $name;

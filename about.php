@@ -30,26 +30,39 @@
                     <th class="table__header--cell">Correo electrónico</th>
                     <th class="table__header--cell">Género</th>
                     <th class="table__header--cell">F. Nacimiento</th>
-                    <th class="table__header--cell">Como nos conoció</th>
+                    <th class="table__header--cell">Cómo nos conoció</th>
                     <th class="table__header--cell">Política de privacidad</th>
                     <th class="table__header--cell">Publicidad</th> 
                 </tr>
             </thead>
             <tbody class="table__body">
-                <tr class="table__row table__row--body">
-                  <td class="table__body--cell">Javier</td>
-                  <td class="table__body--cell">López Sola</td>
-                  <td class="table__body--cell">654321987</td>
-                  <td class="table__body--cell">javierlopez@email.com</td>
-                  <td class="table__body--cell">Masculino</td>
-                  <td class="table__body--cell">20/08/1987</td>
-                  <td class="table__body--cell">Amigo</td>
-                  <td class="table__body--cell">True</td>
-                  <td class="table__body--cell">False</td>
-                </tr>
+                <?php
+                require_once 'ws/GetUser.php';
+
+                $getUser = new GetUser();
+                
+                $users = $getUser->getUsers();
+
+                if (!empty($users)) {
+                    foreach ($users as $user) {
+                        echo "<tr class='table__row table__row--body'>";
+                        echo "<td class='table__body--cell'>" . $user->getName() . "</td>";
+                        echo "<td class='table__body--cell'>" . $user->getLastName() . "</td>";
+                        echo "<td class='table__body--cell'>" . $user->getPhone() . "</td>";
+                        echo "<td class='table__body--cell'>" . $user->getEmail() . "</td>";
+                        echo "<td class='table__body--cell'>" . $user->getGender() . "</td>";
+                        echo "<td class='table__body--cell'>" . $user->getBirthDate()->format('d-m-Y') . "</td>";
+                        echo "<td class='table__body--cell'>" . $user->getHowMeetUs() . "</td>";
+                        echo "<td class='table__body--cell'>" . ($user->getPrivatePolicy() ? 'True' : 'False') . "</td>";
+                        echo "<td class='table__body--cell'>" . ($user->getNewsletter() ? 'True' : 'False') . "</td>";
+                        echo "</tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='9' class='table__body--cell'>No se encontraron usuarios.</td></tr>";
+                }
+                ?>
               </tbody>
         </table>
-        <button type="" action>getAlumno</button>
     </div>
     <footer class="footer">
         <p class="footer__rights">&copy; 2024 Práctica 1 HTML. Todos los derechos reservados.</p>
