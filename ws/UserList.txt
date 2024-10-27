@@ -42,4 +42,37 @@
     "how_meet_us": "other",
     "privacy_policy": true,
     "newsletter": false
+}{
+    "name": "Paco",
+    "last_name": "López Sola",
+    "password": "$2y$10$pgolEDvVq..eebA7Rbg91eP4Zt6aIdWi2MrP\/fS6jg7X8Uwcdieti",
+    "phone": "649023984",
+    "email": "iwant_it_all@hotmail.com",
+    "gender": "male",
+    "birth_date": "26-10-2024",
+    "how_meet_us": "google",
+    "privacy_policy": true,
+    "newsletter": false
+}{
+    "name": "Paco",
+    "last_name": "Sabchez",
+    "password": "$2y$10$v3wsntPdei40i3TURqpZ8un8EF4aoorqbQlvLCV1z5pYmAJeK1baO",
+    "phone": "654321987",
+    "email": "paco@gmail.com",
+    "gender": "male",
+    "birth_date": "20-01-1997",
+    "how_meet_us": "google",
+    "privacy_policy": true,
+    "newsletter": false
+}{
+    "name": "Juan",
+    "last_name": "Santos",
+    "password": "$2y$10$y7RxUOx1vFGLrYKUCRCdbO6\/Oeu\/jPNXSl1ss0gFxUyUdrHBrdbpW",
+    "phone": "654321987",
+    "email": "paco@gmail.com",
+    "gender": "male",
+    "birth_date": "20-01-1997",
+    "how_meet_us": "google",
+    "privacy_policy": true,
+    "newsletter": false
 }

@@ -165,8 +165,6 @@ class User implements IToJson
     // Save users in a txt file
     public function toTextFile(string $user_json): void
     {
-        $file = fopen('UserList.txt','a');
-        fwrite($file, $user_json);
-        fclose($file);
+        file_put_contents('UserList.txt', $user_json, FILE_APPEND);
     }
 }
