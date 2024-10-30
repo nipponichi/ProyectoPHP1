@@ -23,7 +23,7 @@ $password = password_hash($password_input, PASSWORD_BCRYPT);
 // Set string type date in datetime
 $birth_date = new \DateTime($birth_date_input);
 
-$user = new User(
+return $user = new User(
     $id,
     $name, 
     $last_name, 
@@ -37,9 +37,6 @@ $user = new User(
     $newsletter
 );
 
-$user_json = $user->toJson();
-$user->toTextFile($user_json);
-echo $user_json;
 
 
 

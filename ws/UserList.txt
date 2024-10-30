@@ -42,4 +42,26 @@
     "how_meet_us": "other",
     "privacy_policy": true,
     "newsletter": false
+}{
+    "name": "noname",
+    "last_name": "noLastName",
+    "password": "$2y$10$KzaKLvaRuW56dglBii9eT.aAR\/1U1ymByMwSS1AaNytdzhyAet9mq",
+    "phone": "654987321",
+    "email": "no@email.com",
+    "gender": "other",
+    "birth_date": "01-01-1900",
+    "how_meet_us": "unknown",
+    "privacy_policy": false,
+    "newsletter": false
+}{
+    "name": "noname",
+    "last_name": "noLastName",
+    "password": "$2y$10$vZT8nWP81BsD3ZHD\/Ln45.kq.xSHLSH.Oa6OZk5SBxnOwR6LVlMDG",
+    "phone": "654987321",
+    "email": "no@email.com",
+    "gender": "other",
+    "birth_date": "01-01-1900",
+    "how_meet_us": "unknown",
+    "privacy_policy": false,
+    "newsletter": false
 }

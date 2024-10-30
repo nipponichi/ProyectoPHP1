@@ -2,18 +2,21 @@
 
 declare(strict_types=1);
 
-require_once 'Config.php';
+require_once 'Database.php';
 
 class Connection
 {
     private PDO $pdo;
     public function __construct()
     {
+
+        $database = new Database();
+
         try {
             $this->pdo = new PDO(
-                'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=' . DB_CHARSET,
-                DB_USER,
-                DB_PASSWORD,
+                'mysql:host=' . $database->getHost() . ';dbname=' . $database->getName() . ';charset=' . $database->getCharset(),
+                $database->getUser(),
+                $database->getPassword(),
                 [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
             );
         } catch (PDOException $e) {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require_once 'ws/interfaces/IToJson.php';
+require_once '../ws/interfaces/IToJson.php';
 
 class User implements IToJson 
 {
