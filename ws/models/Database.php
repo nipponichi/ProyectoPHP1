@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require_once 'Config.php';
+require_once 'configuration/config.php';
 
 class Database
 {

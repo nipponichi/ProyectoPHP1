@@ -51,7 +51,7 @@
                         echo "<td class='table__body--cell'>" . $user->getPhone() . "</td>";
                         echo "<td class='table__body--cell'>" . $user->getEmail() . "</td>";
                         echo "<td class='table__body--cell'>" . $user->getGender() . "</td>";
-                        echo "<td class='table__body--cell'>" . $user->getBirthDate()->format('d-m-Y') . "</td>";
+                        echo "<td class='table__body--cell'>" . $user->getBirthDate() . "</td>";
                         echo "<td class='table__body--cell'>" . $user->getHowMeetUs() . "</td>";
                         echo "<td class='table__body--cell'>" . ($user->getPrivatePolicy() ? 'True' : 'False') . "</td>";
                         echo "<td class='table__body--cell'>" . ($user->getNewsletter() ? 'True' : 'False') . "</td>";

@@ -2,90 +2,55 @@
 
 declare(strict_types=1);
 
-require_once 'models/Connection.php';
 require_once 'models/User.php';
+require_once 'controller/UserActions.php';
 
-class createUser2
-{
-    private Connection $connection;
+$user = new User();
 
-    private PDO $pdo;
-    public function __construct()
-    {
-        $this->connection = new Connection();
-        $this->pdo = $this->connection->getPDO();
+try {
+    //Data from form
+    $user_data = [
+        'nombre' => $_POST['nombre'] ?? '',
+        'apellidos' => $_POST['apellidos'] ?? '',
+        'fecha_nacimiento' => $_POST['fecha_nacimiento'] ?? '',
+        'password' => $_POST['password'] ?? '',
+        'telefono' => $_POST['telefono'] ?? '',
+        'email' => $_POST['email'] ?? '',
+        'sexo' => $_POST['sexo'] ?? '',
+        'how_meet_us' => $_POST['how_meet_us'] ?? '',
+        'privacy_policy' => isset($_POST['privacy_policy']) ? (bool)$_POST['privacy_policy'] : false,
+        'newsletter' => isset($_POST['newsletter']) ? (bool)$_POST['newsletter'] : false,
+    ];
+
+    $errors = $user->validateForm($user_data, true);
+
+    if (!empty($errors)) {
+        $error_response = [
+            'success' => false,
+            'message' => 'Revisa los campos del formulario:',
+            'data' => $errors
+        ];
+        header('Content-Type: application/json');
+        echo json_encode($error_response, JSON_THROW_ON_ERROR);
+        return;
     }
 
-    public function createUser(): mixed
-    {
-        try {
-            $query = "INSERT INTO alumno (nombre, apellidos, fecha_nacimiento, password, privacy_policy)
-                  VALUES (:nombre, :apellidos, :fecha_nacimiento, :password, :privacy_policy)";
-            $statement = $this->pdo->prepare($query);
+    $user->mountUserFromArray($user_data);
 
-            $nombre = 'Juana';
-            $apellidos = 'Gutierrez';
-            $fecha_nacimiento = '1976-12-19';
-            $password = '1234';
-            $privacy_policy = true;
+    $userActions = new UserActions();
+    $response = $userActions->createUser($user);
 
-            $statement->bindParam(':nombre', $nombre);
-            $statement->bindParam(':apellidos', $apellidos);
-            $statement->bindParam(':fecha_nacimiento', $fecha_nacimiento);
-            $statement->bindParam(':password', $password);
-            $statement->bindParam(':privacy_policy', $privacy_policy);
+    header('Content-Type: application/json');
+    echo json_encode($response, JSON_THROW_ON_ERROR);
 
-            $statement->execute();
+} catch (Exception $e) {
+    
+    $error_response = [
+        'success' => false,
+        'message' => 'Error al crear alumno: ' . $e->getMessage(),
+        'data' => []
+    ];
 
-            $user_id = $this->pdo->lastInsertId();
-
-            return [
-                'id' => $user_id,
-                'nombre' => $nombre,
-                'apellidos' => $apellidos,
-                'fecha_nacimiento' => $fecha_nacimiento,
-                'password' => $password,
-                'privacy_policy' => $privacy_policy
-            ];
-
-        } catch (PDOException $e) {
-            throw new Exception('Error al crear alumno: ' . $e->getMessage());
-        }
-    }
-
-    public function request()
-    {
-        try {
-
-            $new_user = $this->createUser();
-
-            $response = [
-                'success' => true,
-                'message' => 'Alumno creado correctamente',
-                'data' => $new_user,
-            ];
-
-            header('Content-Type: application/json');
-            $response_json = json_encode($response, JSON_THROW_ON_ERROR);
-            print_r($response_json);
-        } catch (Exception $e) {
-            $response = [
-                'success' => false,
-                'message' => $e->getMessage(),
-                'data' => null,
-            ];
-            header('Content-Type: application/json');
-            $response_json = json_encode($response, JSON_THROW_ON_ERROR);
-            print_r($response_json);
-        }
-    }
-
+    header('Content-Type: application/json');
+    echo json_encode($error_response, JSON_THROW_ON_ERROR);
 }
-
-$createUser2 = new CreateUser2();
-$createUser2->request();
-
-
-
-
-
