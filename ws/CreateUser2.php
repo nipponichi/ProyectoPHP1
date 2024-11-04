@@ -3,9 +3,10 @@
 declare(strict_types=1);
 
 require_once 'models/User.php';
-require_once 'controller/UserActions.php';
+require_once 'controllers/UserActions.php';
 
-$user = new User();
+$user = new User(0, '', '', '', '', '', '', '', '', false, false);
+$userActions = new UserActions();
 
 try {
     //Data from form
@@ -25,32 +26,21 @@ try {
     $errors = $user->validateForm($user_data, true);
 
     if (!empty($errors)) {
-        $error_response = [
-            'success' => false,
-            'message' => 'Revisa los campos del formulario:',
-            'data' => $errors
-        ];
-        header('Content-Type: application/json');
-        echo json_encode($error_response, JSON_THROW_ON_ERROR);
+        $response = new Response(false, 'Revisa los campos del formulario', $errors);
+        $response = $response->toJson();
+        header('Content-Type: application/json; charset=utf-8');
+        echo $response;
         return;
     }
 
     $user->mountUserFromArray($user_data);
-
-    $userActions = new UserActions();
     $response = $userActions->createUser($user);
-
-    header('Content-Type: application/json');
-    echo json_encode($response, JSON_THROW_ON_ERROR);
+    header('Content-Type: application/json; charset=utf-8');
+    echo $response;
 
 } catch (Exception $e) {
-    
-    $error_response = [
-        'success' => false,
-        'message' => 'Error al crear alumno: ' . $e->getMessage(),
-        'data' => []
-    ];
-
-    header('Content-Type: application/json');
-    echo json_encode($error_response, JSON_THROW_ON_ERROR);
+    $response = new Response(false, 'Error creando alumno: ' . $e->getMessage(), []);
+    $response = $response->toJson();
+    header('Content-Type: application/json; charset=utf-8');
+    echo $response;
 }

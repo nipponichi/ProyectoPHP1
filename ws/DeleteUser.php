@@ -2,38 +2,27 @@
 
 declare(strict_types=1);
 
-require_once 'controller/UserActions.php';
+require_once 'controllers/UserActions.php';
 
 try {
-
     $id = isset($_GET['id']) ? (int) $_GET['id'] : null;
-
     if ($id === null) {
-        $response = [
-            'success' => false,
-            'message' => 'Debes proporcionar un ID',
-            'data' => null,
-        ];
-
-        header('Content-Type: application/json');
-        echo $json_response = json_encode($response, JSON_THROW_ON_ERROR);
+        $response = new Response(false, 'Debes proporcionar un ID', []);
+        $response = $response->toJson();
+        header('Content-Type: application/json; charset=utf-8');
+        echo $response;
+        return;
     }
 
     $userActions = new UserActions();
     $response = $userActions->deleteUser($id);
-
-    header('Content-Type: application/json');
-    echo json_encode($response, JSON_THROW_ON_ERROR);
+    header('Content-Type: application/json; charset=utf-8');
+    echo $response;
 } catch (Exception $e) {
-
-    $error_response = [
-        'success' => false,
-        'message' => 'Error al eliminar alumno: ' . $e->getMessage(),
-        'data' => []
-    ];
-
-    header('Content-Type: application/json');
-    echo json_encode($error_response, JSON_THROW_ON_ERROR);
+    $response = new Response(false, 'Error al eliminar alumno', []);
+    $response = $response->toJson();
+    header('Content-Type: application/json; charset=utf-8');
+    echo $response;
 }
 
 

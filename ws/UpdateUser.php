@@ -3,25 +3,22 @@
 declare(strict_types=1);
 
 require_once 'models/User.php';
-require_once 'controller/UserActions.php';
+require_once 'controllers/UserActions.php';
 
-$user = new User();
+$user = new User(0, '', '', '', '', '', '', '', '', false, false);
+$userActions = new UserActions();
 
 try {
-    $id = isset($_GET['id']) ? (int) $_GET['id'] : null;
+    $id = isset($_GET['id']) && $_GET['id'] !== '' ? (int) $_GET['id'] : null;
 
-    if ($id === null) {
-        $response = [
-            'success' => false,
-            'message' => 'Debes proporcionar un ID',
-            'data' => null,
-        ];
-        header('Content-Type: application/json');
-        echo $json_response = json_encode($response, JSON_THROW_ON_ERROR);
+    if ($id === null || $id <= 0) {
+        $response = new Response(false, 'Debes proporcionar un ID válido', []);
+        header('Content-Type: application/json; charset=utf-8');
+        echo $response->toJson();
         return;
     }
 
-    //Data from form
+    // Data from form
     $user_data = [
         'id' => $id,
         'nombre' => $_POST['nombre'] ?? '',
@@ -32,42 +29,29 @@ try {
         'email' => $_POST['email'] ?? '',
         'sexo' => $_POST['sexo'] ?? '',
         'how_meet_us' => $_POST['how_meet_us'] ?? '',
-        'privacy_policy' => isset($_POST['privacy_policy']) ? (bool)$_POST['privacy_policy'] : false,
-        'newsletter' => isset($_POST['newsletter']) ? (bool)$_POST['newsletter'] : false,
+        'privacy_policy' => isset($_POST['privacy_policy']) 
+            ? ($_POST['privacy_policy'] === 'true' ? true : ($_POST['privacy_policy'] === 'false' ? false : null)) 
+            : null,
+        'newsletter' => isset($_POST['newsletter']) 
+            ? ($_POST['newsletter'] === 'true' ? true : ($_POST['newsletter'] === 'false' ? false : null)) 
+            : null,
     ];
-    
+
     $errors = $user->validateForm($user_data, false);
 
     if (!empty($errors)) {
-        $error_response = [
-            'success' => false,
-            'message' => 'Revisa los campos del formulario:',
-            'data' => $errors
-        ];
-        header('Content-Type: application/json');
-        echo json_encode($error_response, JSON_THROW_ON_ERROR);
+        $response = new Response(false, 'Revisa los campos del formulario: ', $errors);
+        header('Content-Type: application/json; charset=utf-8');
+        echo $response->toJson();
         return;
     }
 
     $user->mountUserFromArray($user_data);
-
-    $userActions = new UserActions();
     $response = $userActions->updateUser($user);
-
-    header('Content-Type: application/json');
-    echo json_encode($response, JSON_THROW_ON_ERROR);
+    header('Content-Type: application/json; charset=utf-8');
+    echo $response;
 } catch (Exception $e) {
-    $response = [
-        'success' => false,
-        'message' => 'Error al actualizar alumno: ' . $e->getMessage(),
-        'data' => null,
-    ];
-    header('Content-Type: application/json');
-    echo $json_response = json_encode($response, JSON_THROW_ON_ERROR);
+    $response = new Response(false, 'Error actualizando alumno: ' . $e->getMessage(), []);
+    header('Content-Type: application/json; charset=utf-8');
+    echo $response->toJson();
 }
-
-
-
-
-
-

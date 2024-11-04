@@ -2,24 +2,18 @@
 
 declare(strict_types=1);
 
-require_once 'controller/UserActions.php';
+require_once 'controllers/UserActions.php';
+require_once 'models/Response.php';
 
 try {
     $id = isset($_GET['id']) ? (int) $_GET['id'] : null;
     $userActions = new UserActions();
-
     $response = $id !== null ? $userActions->getUserById($id) : $userActions->getUsers();
-
-    header('Content-Type: application/json');
-    echo json_encode($response, JSON_THROW_ON_ERROR);
+    header('Content-Type: application/json; charset=utf-8');
+    echo $response;
 } catch (Exception $e) {
-
-    $error_response = [
-        'success' => false,
-        'message' => 'Error mostrando alumno/s: ' . $e->getMessage(),
-        'data' => []
-    ];
-
-    header('Content-Type: application/json');
-    echo json_encode($error_response, JSON_THROW_ON_ERROR);
+    $response = new Response(false, 'Error mostrando alumno/s: ' . $e->getMessage(), []);
+    $response = $response->toJson();
+    header('Content-Type: application/json; charset=utf-8');
+    echo $response;
 }

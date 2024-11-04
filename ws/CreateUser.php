@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 require_once '../ws/models/User.php';
+require_once '../ws/controllers/UserActions.php';
 
 // html form values
 $id = (int) ($_POST['id'] ?? '0');
@@ -14,13 +15,17 @@ $email = (string) ($_POST['email'] ?? 'no@email.com');
 $gender = (string) ($_POST['gender'] ?? 'other');
 $birth_date = (string) ($_POST['birthday'] ?? '1900-01-01');
 $how_meet_us = (string) ($_POST['how_meet_us'] ?? 'unknown');
-$privacy_policy = (bool) ($_POST['privacy_policy'] === 1 ? true : false);
-$newsletter = (bool) ($_POST['newsletter'] === 1 ? true : false);
+$privacy_policy = isset($_POST['privacy_policy'])
+? ($_POST['privacy_policy'] === 'true' ? true : ($_POST['privacy_policy'] === 'false' ? false : null)) 
+: null;
+$newsletter = isset($_POST['newsletter']) 
+? ($_POST['newsletter'] === 'true' ? true : ($_POST['newsletter'] === 'false' ? false : null)) 
+: null;
 
 // encrypt password 
 $password = password_hash($password_input, PASSWORD_BCRYPT);
 
-return $user = new User(
+$user = new User(
     $id,
     $name,
     $last_name,
@@ -33,7 +38,6 @@ return $user = new User(
     $privacy_policy,
     $newsletter
 );
-
 
 
 

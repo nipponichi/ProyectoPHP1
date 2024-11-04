@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-require_once '../ws/interfaces/IToJson.php';
-
-class User implements IToJson
+class User 
 {
     private int $id;
     private string $name;
@@ -15,21 +13,21 @@ class User implements IToJson
     private string $gender;
     private string $birth_date;
     private string $how_meet_us;
-    private bool $privacy_policy;
-    private bool $newsletter;
+    private ?bool $privacy_policy;
+    private ?bool $newsletter;
 
     public function __construct(
-        int $id = 0,
-        string $name = '',
-        string $last_name = '',
-        string $password = '',
-        ?string $phone = '',
-        ?string $email = '',
-        ?string $gender = '',
-        string $birth_date = '',
-        ?string $how_meet_us = '',
-        bool $privacy_policy = false,
-        bool $newsletter = false
+        int $id,
+        string $name,
+        string $last_name,
+        string $password,
+        string $phone,
+        string $email,
+        string $gender,
+        string $birth_date,
+        string $how_meet_us,
+        ?bool $privacy_policy,
+        ?bool $newsletter
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -146,9 +144,9 @@ class User implements IToJson
         $this->how_meet_us = $how_meet_us;
     }
 
-    public function setPolicy(bool $private_policy): void
+    public function setPrivacyPolicy(bool $privacy_policy): void
     {
-        $this->policy = $private_policy;
+        $this->privacy_policy = $privacy_policy;
     }
 
     public function setNewsletter(bool $newsletter): void
@@ -186,77 +184,58 @@ class User implements IToJson
         $this->gender = $data['sexo'] ?? '';
         $this->birth_date = $data['fecha_nacimiento'] ?? '';
         $this->how_meet_us = $data['how_meet_us'] ?? '';
-        $this->privacy_policy = !empty($data['privacy_policy']) ? (bool) $data['privacy_policy'] : false;
-        $this->newsletter = !empty($data['newsletter']) ? (bool) $data['newsletter'] : false;
+        $this->privacy_policy = isset($data['privacy_policy']);
+        $this->privacy_policy = $data['privacy_policy'] ?? null;
+        $this->newsletter = $data['newsletter'] ?? null;
 
         return $this;
     }
 
-    // Converts user values to JSON
-    public function toJson(): string
-    {
-        $user_values = [
-            'name' => $this->name,
-            'last_name' => $this->last_name,
-            'password' => $this->password,
-            'phone' => $this->phone,
-            'email' => $this->email,
-            'gender' => $this->gender,
-            'birth_date' => $this->birth_date,
-            'how_meet_us' => $this->how_meet_us,
-            'privacy_policy' => $this->privacy_policy,
-            'newsletter' => $this->newsletter
-        ];
-
-        return json_encode($user_values, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-    }
-
     // Checks form values
-    function validateForm($user_data, $is_new_user): array
+    function validateForm(array $user_data, bool $is_new_user): array
     {
-
         $errors = [];
-
-        if (empty($user_data['nombre']) && $is_new_user) {
-            $errors[] = 'El nombre es obligatorio';
+    
+        $required_fields = [
+            'nombre' => 'El nombre es obligatorio',
+            'apellidos' => 'Los apellidos son obligatorios',
+            'fecha_nacimiento' => 'La fecha de nacimiento es obligatoria',
+            'password' => 'La contraseña es obligatoria',
+            'telefono' => 'El teléfono es obligatorio',
+            'email' => 'El correo electrónico es obligatorio',
+            'sexo' => 'El género es obligatorio',
+        ];
+    
+        // Only for new users
+        if ($is_new_user) {
+            foreach ($required_fields as $field => $error_message) {
+                if (empty($user_data[$field])) {
+                    $errors[] = $error_message;
+                }
+            }
         }
-
-        if (empty($user_data['apellidos']) && $is_new_user) {
-            $errors[] = 'Los apellidos son obligatorios';
-        }
-
-        if (empty($user_data['fecha_nacimiento']) && $is_new_user) {
-            $errors[] = 'La fecha de nacimiento es obligatoria';
-        }
-
-        if (empty($user_data['password']) && $is_new_user) {
-            $errors[] = 'La contraseña es obligatoria';
-        } elseif (strlen($user_data['password']) < 8) {
+        // All the users
+        if (!empty($user_data['password']) && strlen($user_data['password']) < 8) {
             $errors[] = 'La contraseña debe tener al menos 8 caracteres';
         }
-
-        if (empty($user_data['telefono']) && $is_new_user) {
-            $errors[] = 'El teléfono es obligatorio';
-        } elseif (!preg_match('/^\d{9}$/', $user_data['telefono'])) {
+    
+        if (!empty($user_data['telefono']) && !preg_match('/^\d{9}$/', $user_data['telefono'])) {
             $errors[] = 'El teléfono debe tener 9 números';
         }
-
-        if (empty($user_data['email']) && $is_new_user) {
-            $errors[] = 'El correo electrónico es obligatorio';
-        } elseif (!filter_var($user_data['email'], FILTER_VALIDATE_EMAIL)) {
+    
+        if (!empty($user_data['email']) && !filter_var($user_data['email'], FILTER_VALIDATE_EMAIL)) {
             $errors[] = 'El correo electrónico no es válido';
         }
-
-        if (empty($user_data['sexo']) && $is_new_user) {
-            $errors[] = 'El género es obligatorio';
-        } elseif (!empty($user_data['sexo']) && (strlen($user_data['sexo']) > 1 || !in_array(strtoupper($user_data['sexo']), ['M', 'F', 'O']))) {
+    
+        if (!empty($user_data['sexo']) && (strlen($user_data['sexo']) > 1 || !in_array(strtoupper($user_data['sexo']), ['M', 'F', 'O']))) {
             $errors[] = 'El género debe ser M, F u O';
         }
-
-        if (!$user_data['privacy_policy'] && $is_new_user) {
+    
+        if ($is_new_user && empty($user_data['privacy_policy'])) {
             $errors[] = 'Debe aceptar la política de privacidad';
         }
-
+    
         return $errors;
     }
+    
 }
