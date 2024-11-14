@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 require_once 'controllers/UserActions.php';
 
+use models\Response;
+use controllers\UserActions;
+
 try {
     $id = isset($_GET['id']) ? (int) $_GET['id'] : null;
     if ($id === null) {

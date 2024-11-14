@@ -5,6 +5,8 @@ declare(strict_types=1);
 require_once '../ws/models/User.php';
 require_once '../ws/controllers/UserActions.php';
 
+use models\User;
+
 // html form values
 $id = (int) ($_POST['id'] ?? '0');
 $name = (string) ($_POST['name'] ?? 'noname');

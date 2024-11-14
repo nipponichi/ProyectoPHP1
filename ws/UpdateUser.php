@@ -5,6 +5,10 @@ declare(strict_types=1);
 require_once 'models/User.php';
 require_once 'controllers/UserActions.php';
 
+use models\Response;
+use models\User;
+use controllers\UserActions;
+
 $user = new User(0, '', '', '', '', '', '', '', '', false, false);
 $userActions = new UserActions();
 

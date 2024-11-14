@@ -2,6 +2,10 @@
 
 declare(strict_types=1);
 
+namespace models;
+
+use PDO;
+
 require_once 'configurations/config.php';
 
 class Database

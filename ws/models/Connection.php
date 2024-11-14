@@ -2,6 +2,12 @@
 
 declare(strict_types=1);
 
+namespace models;
+
+use PDO;
+use PDOException;
+use models\Database;
+
 require_once 'Database.php';
 
 class Connection

@@ -5,6 +5,9 @@ declare(strict_types=1);
 require_once 'controllers/UserActions.php';
 require_once 'models/Response.php';
 
+use controllers\UserActions;
+use models\Response;
+
 try {
     $id = isset($_GET['id']) ? (int) $_GET['id'] : null;
     $userActions = new UserActions();

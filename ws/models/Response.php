@@ -2,6 +2,10 @@
 
 declare(strict_types=1);
 
+namespace models;
+
+use ws\interfaces\IToJson;
+
 require_once 'Database.php';
 require_once '../ws/interfaces/IToJson.php';
 

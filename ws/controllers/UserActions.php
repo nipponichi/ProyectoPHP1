@@ -2,9 +2,18 @@
 
 declare(strict_types=1);
 
+namespace controllers;
+
 require_once 'models/Connection.php';
 require_once 'models/User.php';
 require_once 'models/Response.php';
+
+use models\Connection;
+use models\Response;
+use models\User;
+use PDO;
+use Exception;
+
 
 class UserActions
 {
